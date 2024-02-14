@@ -1,24 +1,24 @@
 class Solution {
 public:
-    int numSubarrayProductLessThanK(vector<int>& a, int k) {
-        int n=a.size();
-        int c=0,s;
-        for(int i=0;i<n;i++){
-            s=a[i];
-            if(a[i]<k){
-                c++;
+    int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+        int n=nums.size();
+        if(n==0)return 0;
+        long long p=1;
+        int start=0;
+        int end=0;
+        int count=0;
+        while(end<n){
+            p=p*nums[end];
+            while(start<end && p>=k){
+                p/=nums[start];
+                start++;
             }
-            for(int j=i+1;j<n;j++){
-                s=s*a[j];
-                if(s<k){
-                    c++;
-                }
-                else{
-                    break;
-                }
+            if(p<k){
+                count+=(end-start+1);
             }
+            end++;
         }
-        return c;
-
+        return count;
     }
+    
 };
