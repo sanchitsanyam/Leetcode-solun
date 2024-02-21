@@ -1,17 +1,14 @@
 class Solution {
 public:
+    bool isPowerOfThreeHelper(int n){
+        cout<<n<<endl;
+        if(n<=0) return false;
+        if(n==1) return true;
+        if(n%3!=0) return false;
+        return isPowerOfThreeHelper(n/3);
+    }
     bool isPowerOfThree(int n) {
-        //recursion
-        if(n<=0)return false;
-        while(n !=1){
-            if(n%3==0){
-               n=n/3;
-            }
-            else{
-                return false;
-            }
-        }
-        return  true;
+        return isPowerOfThreeHelper(n);
         
     }
 };
