@@ -10,8 +10,7 @@ public:
     long long minimumTime(vector<int>& time, int totalTrips) {
         long long s=1;
         long long e=time[0];
-        // long long r=time[0]*totalTrips;
-        // if(time.size()==1)return r;
+        
         for(int i=0;i<time.size();i++){
             e=min((long long)(time[i]),e);
         }
