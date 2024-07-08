@@ -2,20 +2,20 @@ class Solution {
 public:
     int peakIndexInMountainArray(vector<int>& arr) {
         int n=arr.size();
-        int s=1;
-        int e=n-2;
-        if(arr[0]<arr[1]&&arr[1]>arr[2])return 1;
-        while(s<=e){
-            int m=e+(s-e)/2;
-            if(arr[m-1]<=arr[m]&&arr[m]>=arr[m+1]) return m;
-            else if(arr[m-1]<arr[m]&&arr[m]<arr[m+1]){
-                s=m+1;
+        int l=0;
+        int r=n-1;
+        while(l<=r){
+            int m=r+(l-r)/2;
+            if(arr[m]>arr[m-1] && arr[m]>arr[m+1]){
+               return m;
             }
-            else if(arr[m-1]>arr[m]&&arr[m]>arr[m+1]){
-                e=m-1;
+            if(arr[m]>arr[m-1]){
+                l=m+1;
+            }
+            else{
+                r=m-1;
             }
         }
         return -1;
-
     }
 };
