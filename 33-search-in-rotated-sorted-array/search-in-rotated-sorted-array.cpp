@@ -1,43 +1,28 @@
 class Solution {
 public:
-    int binarySearch(vector<int>& arr,int l,int r,int k){
-        int m;
+    int search(vector<int>& nums, int target) {
+        int l=0,r=nums.size()-1;
         while(l<=r){
-            m=l+(r-l)/2;
-            if(arr[m]==k){
-                return m;
-            }
-            else if(arr[m]<k){
-                l=m+1;
-                
-            }
-            else{
+            int m=(l+r)/2;
+            if(target>=nums[0] && nums[m]< nums[0]){
+                // target in 1st part and we in 2nd part
                 r=m-1;
             }
-        }
-        return -1;
-    }
-    int search(vector<int>& nums, int target) {
-        int p;//p->pivot index
-        int n=nums.size();
-        int l=0,r=n-1;
-        while(l<r){
-            int m=l+(r-l)/2;
-            if(nums[m]>nums[r]){
+            else if(target<nums[0] && nums[m]>= nums[0]){
+                // target in 2nd  part and we in Ist part
                 l=m+1;
             }
             else{
-                r=m;
+                if(nums[m]==target){
+                    return m;
+                }
+                else if(nums[m]>target){
+                    r=m-1;
+                }
+                else{
+                    l=m+1;
+                }
             }
-        }
-         p=l;
-        int a=binarySearch(nums,0,p-1,target);
-        int b=binarySearch(nums,p,n-1,target);
-        if(a==-1){
-            return b;
-        }
-        else if(b==-1){
-            return a;
         }
         return -1;
     }
