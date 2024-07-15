@@ -1,113 +1,114 @@
+
 class Node{
-    public:    
-        int data;
-        Node* next;
-        
-        Node(int value){
-            data=value;
-            next=NULL;
-        }
+public:    
+    Node * next;
+    int data;
+    Node(int val){
+        data=val;
+        next=NULL;
+    }
+
 };
 class MyLinkedList {
     Node* head;
     int length;
-
 public:
     MyLinkedList() {
-        head=NULL;
-        length=0;
+       head=NULL;
+       length=0;
     }
     
     int get(int index) {
-        if(index < 0 || index >= this->length){
-            return -1;
+        
+        Node *curr=head;
+        for(int i=0;i<index && curr!=NULL;i++){
+            curr=curr->next;
         }
-        Node *cur=this->head;
-        for(int i=0;i<index;i++){
-            cur=cur->next;
-        }
-        return cur->data;
+        return(curr==NULL)?-1 : curr->data;
     }
     
     void addAtHead(int val) {
-        Node *newHead = new Node(val);
-        newHead->next=this->head;
-        this->head=newHead;
-        this->length +=1;
-
-        
+        Node* newNode= new Node(val);
+        newNode->next=head;
+        head=newNode;
+        length++;
     }
     
     void addAtTail(int val) {
-        if(this->length==0){
+        if(head==NULL){
             addAtHead(val);
             return;
         }
-        Node  *curr=this->head;
-        while(curr->next!=NULL){
-              curr=curr->next;
+        Node * curr=head;
+        for(int i=0;i<length-1;i++){
+            curr=curr->next;
         }
-        Node* newTail=new Node(val);
-        curr->next = newTail;
-        this->length += 1;
+        Node* newNode= new Node(val);
+        curr->next=newNode;
+        length++;
 
         
     }
     
     void addAtIndex(int index, int val) {
-        if(index<0 || index > this->length ){
-            return ;
+        if(index > length || index<0){
+           return;
         }
         if(index==0){
            addAtHead(val);
-           return; 
+           return ; 
         }
-        if(index==this->length){
-           addAtTail(val); 
-           return;
-        }
-        Node* cur =this->head;
-        for(int i=0;i<index-1;i++){
-            cur=cur->next;
-        }
-        Node* atIndex=new Node(val);
-        atIndex->next=cur->next;
-        cur->next=atIndex;
-        this->length +=1;
-
-    }
-    void deleteAtHead(){
-        if(this->length <=0){
+        if(index==length){
+            addAtTail(val);
             return;
         }
-        Node* oldHead=this->head;
-        this->head=head->next;
-        this->length-=1;
-        delete oldHead;
-
+        Node* curr=head;
+        for(int i = 0; i < index-1; i++){
+            curr=curr->next;
+        }
+        Node* newNode= new Node(val);
+        newNode->next=curr->next;
+        curr->next=newNode;
+        length++;
+    }
+    void deleteAtHead(){
+        if(length==0)return;
+        Node * temp=head;
+        head=head->next;
+        delete temp;
+        length--;
+    }
+    void deleteAtTail(){
+        Node * curr=head;
+        for(int i=0;i<length-2;i++){
+            curr=curr->next;
+        }
+        Node * temp=curr->next;
+        curr->next=NULL;
+        delete temp;
+        length--;
     }
     
     void deleteAtIndex(int index) {
-        if(index<0 || index>=this->length){
-            return ;
-        }
+        if(index<0 || index>=length)return;
         if(index==0){
-            deleteAtHead();
-            return;
+           deleteAtHead();
+           return;
         }
-        Node* curr =this->head;
+        if(index==length-1){
+           deleteAtTail();
+           return;
+        }
+        Node * curr=head;
         for(int i=0;i<index-1;i++){
             curr=curr->next;
-        } 
-        Node* oldNode=curr->next;
+        }
+        Node * temp=curr->next;
         curr->next=curr->next->next;
-        this->length-=1;
-        delete oldNode;
-
-        
+        delete temp;
+        length--;
     }
 };
-
 
 /**
  * Your MyLinkedList object will be instantiated and called as such:
