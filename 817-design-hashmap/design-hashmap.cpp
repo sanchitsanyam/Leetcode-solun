@@ -1,11 +1,11 @@
 class MyHashMap {
 public:
     vector<int> m;
-    int siz;
+    int siz ;
     MyHashMap() {
-        siz=1e6+1;
-        m.resize(siz);
-        fill(m.begin(),m.end(),-1);
+       siz = 1e6+1;
+       m.resize(siz);
+       fill(m.begin() , m.end(),-1); 
     }
     
     void put(int key, int value) {
