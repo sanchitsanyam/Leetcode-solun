@@ -1,47 +1,40 @@
 class StockPrice {
 public:
-    unordered_map<int ,int> timetoPrice;//unorderd map is implemented uding vector<list<pair<int,int>>> 
-    // using hash function , and to reduce collison 
-    map<int,int> PricetoFreq;// map is implemented using red black tree
+    unordered_map<int, int> TimeToPrice;
+    map<int,int> PriceToFreq;
     int latestTime;
     StockPrice() {
-       int latestTime=0; 
+       latestTime=0; 
     }
     
     void update(int timestamp, int price) {
         latestTime=max(latestTime,timestamp);
-        // decrement PricetoFreq if same timeStamp comes
-        
-        if(timetoPrice.count(timestamp)){
-            int oldPrice= timetoPrice[timestamp];
-            timetoPrice[timestamp]=price;
-            PricetoFreq[price]+=1;
-            if(PricetoFreq[oldPrice]==1){
-                PricetoFreq.erase(oldPrice);
+        if(TimeToPrice.count(timestamp)){
+            int oldPrice = TimeToPrice[timestamp];
+            if(PriceToFreq[ oldPrice]==1){
+                PriceToFreq.erase(oldPrice);
             }
             else{
-                PricetoFreq[oldPrice]-=1;
+                PriceToFreq[oldPrice]--;
             }
+
         }
-        else{
-            timetoPrice[timestamp]=price;
-            PricetoFreq[price]+=1;
-        }
-        
+        PriceToFreq[price]++;
+        TimeToPrice[timestamp]= price;
     }
     
     int current() {
-        return timetoPrice[latestTime];
+        return TimeToPrice[latestTime];
     }
     
     int maximum() {
-        auto it=(--PricetoFreq.end());
+        auto it= --PriceToFreq.end();
         return it->first;
     }
     
     int minimum() {
-       auto it =PricetoFreq.begin();
-       return it->first;
+        auto it= PriceToFreq.begin();
+        return it->first;
     }
 };
 
