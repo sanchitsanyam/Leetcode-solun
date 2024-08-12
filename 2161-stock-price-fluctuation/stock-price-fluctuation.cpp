@@ -9,7 +9,7 @@ public:
     
     void update(int timestamp, int price) {
         latestTime=max(latestTime,timestamp);
-        if(TimeToPrice.count(timestamp)){
+        if(TimeToPrice[timestamp]!=0){
             int oldPrice = TimeToPrice[timestamp];
             if(PriceToFreq[ oldPrice]==1){
                 PriceToFreq.erase(oldPrice);
