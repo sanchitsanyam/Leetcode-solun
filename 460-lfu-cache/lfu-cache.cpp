@@ -1,106 +1,71 @@
-
-struct Node {
-    int key,val,cnt;
-    Node* prev;
-    Node* next;
-    Node(int k,int v){
-        key=k;
-        val=v;
-        cnt=1;
-    }
-};
-struct List{
-    int size;
-    Node* Head;
-    Node* Tail;
-    List(){
-        Head=new Node(0,0);
-        Tail=new Node(0,0);
-        Head->next=Tail;
-        Tail->prev=Head;
-        size=0;
-    }
-    void addfront(Node *node){
-        Node* temp=Head->next;
-        node->next=temp;
-        node->prev=Head;
-        temp->prev=node;
-        Head->next=node;
-        size++;
-    }
-    void delnode(Node* del){
-        Node* delprev=del->prev;
-        Node* delnext=del->next;
-        delnext->prev=delprev;
-        delprev->next=delnext;
-        size--;
-    }
-}; 
 class LFUCache {
-    map<int,Node*> keyNode;
-    map<int ,List*> freqListMap;
-    int maxSizeCache;
-    int minFreq;
-    int CurrSize;
+    unordered_map<int,int> keyToVal;
+    unordered_map<int,int> keyToFreq;
+    unordered_map<int,list<int>::iterator> keyToNode;
+    map<int,list<int> > freqToKeys;
+    int cap;
+
+    void evictAppropriately() {
+        int minFreq = freqToKeys.begin()->first;
+        int culpritKey = freqToKeys[minFreq].front();
+
+        keyToVal.erase(culpritKey);
+        keyToFreq.erase(culpritKey);
+        keyToNode.erase(culpritKey);
+        freqToKeys[minFreq].pop_front();
+        if(freqToKeys[minFreq].empty())
+            freqToKeys.erase(minFreq);
+    }
+
+    void transferFreq(int key) {
+
+        // Getting rid of the old node.
+        int oldFreq = keyToFreq[key];
+        auto nodeToDel = keyToNode[key];
+        freqToKeys[oldFreq].erase(nodeToDel);
+        if(freqToKeys[oldFreq].empty())
+            freqToKeys.erase(oldFreq);
+
+        // Correcting stuff.
+        keyToFreq[key] = oldFreq + 1;
+        freqToKeys[oldFreq + 1].push_back(key);
+        keyToNode[key] = --freqToKeys[oldFreq + 1].end();
+    }
+
 public:
     LFUCache(int capacity) {
-        maxSizeCache=capacity;
-        minFreq=0;
-        CurrSize=0;
+        cap = capacity;
     }
-    void updatefreqListMap(Node * node){
-        keyNode.erase(node->key);
-        freqListMap[node->cnt]->delnode(node);
-        if(node->cnt==minFreq &&freqListMap[node->cnt]->size==0){
-            minFreq++;
-        }
-        List*nextHigherFreqList=new List();
-        if(freqListMap.find(node->cnt+1)!=freqListMap.end()){
-            nextHigherFreqList=freqListMap[node->cnt+1];
-        }
-        node->cnt+=1;
-        nextHigherFreqList->addfront(node);
-        freqListMap[node->cnt]=nextHigherFreqList;
-        keyNode[node->key]=node;
-    }
+    
     int get(int key) {
-        if(keyNode.find(key)!=keyNode.end()){
-            Node *node=keyNode[key];
-            int value=node->val;
-            updatefreqListMap(node);
-            return value;
-        }
-        return -1;
+        if(!keyToVal.count(key))
+            return -1;
+        
+        /*
+            1. Remove it from old freq list.
+            2. Add to the back of the new freq list.
+            3. Update the keyToFreq & keyToNode etc.
+        */
+        transferFreq(key);
+
+        return keyToVal[key];
     }
     
     void put(int key, int value) {
-        if( maxSizeCache==0){
+        if(keyToVal.count(key)) {
+            transferFreq(key);
+            keyToVal[key] = value;
             return;
         }
-        if(keyNode.find(key)!=keyNode.end()){
-            Node* node=keyNode[key];
-            node->val=value;
-            updatefreqListMap(node);
+        // Definitely a new key.
+        if(keyToVal.size() == cap) {
+            evictAppropriately();
         }
-        else{
-            if(maxSizeCache==CurrSize){
-                List* list = freqListMap[minFreq];
-                keyNode.erase(list->Tail->prev->key);
-                freqListMap[minFreq]->delnode(list->Tail->prev);
-                CurrSize--;
-            }
-            CurrSize++;
-            // new value has to be added who is not there previously
-            minFreq=1;
-            List* listFreq=new List();
-            if(freqListMap.find(minFreq) !=freqListMap.end()){
-                listFreq=freqListMap[minFreq];
-            }
-            Node* node =new Node(key,value);
-            listFreq->addfront(node);
-            keyNode[key]=node;
-            freqListMap[minFreq]=listFreq;
-        }
+
+        keyToVal[key] = value;
+        keyToFreq[key] = 1;
+        freqToKeys[1].push_back(key);
+        keyToNode[key] = --freqToKeys[1].end();
     }
 };
 
