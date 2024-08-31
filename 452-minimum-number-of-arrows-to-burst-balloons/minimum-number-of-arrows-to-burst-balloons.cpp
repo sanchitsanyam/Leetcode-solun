@@ -1,24 +1,25 @@
 class Solution {
 public:
-    //competitior function
-    bool static sorted(const vector<int>&v1,const vector<int>&v2){
+    bool static comp(vector<int>&v1 , vector<int>&v2){
         return v1[1]<v2[1];
     }
     int findMinArrowShots(vector<vector<int>>& points) {
-        sort(points.begin(),points.end(),sorted);
+        sort(points.begin(), points.end() , comp );
         int n=points.size();
-        int count=1;
-        int x=points[0][1];
-        for(int i=1;i<n;i++){
-            if(x>=points[i][0] && x<=points[i][1]){
-                continue;
-            }
-            else{
-                count++;
-                x=points[i][1];
+        int cnt=1;
+        int tg=points[0][1];
+       
+        for(int i=0;i<n;i++){
+            if(tg>=points[i][0]){
+                
                 
             }
+            else{
+                tg=points[i][1];
+                cnt++;
+            }
+            
         }
-        return count;
+        return cnt;
     }
 };
