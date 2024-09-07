@@ -17,7 +17,7 @@ public:
     vector<string> generateParenthesis(int n) {
         vector<string> ans;
         generateParenthesishelper(ans,"",n,0);
-        sort(ans.begin(),ans.end());
+        // sort(ans.begin(),ans.end());
         return ans;
     }
 };
