@@ -5,10 +5,11 @@ public:
             ans.push_back(temp);
             return;
         }
-        recursion(i+1,n,nums,temp,ans);
         temp.push_back(nums[i]);
         recursion(i+1,n,nums,temp,ans);
         temp.pop_back();
+        recursion(i+1,n,nums,temp,ans);
+       
     }
         
     
