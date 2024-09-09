@@ -1,24 +1,19 @@
 class Solution {
 public:
-    void recursion(int i,int n,vector<int>& nums,vector<int>& temp,vector<vector<int>>& ans){
-        if(i==n){
-            ans.push_back(temp);
-            return;
-        }
-        temp.push_back(nums[i]);
-        recursion(i+1,n,nums,temp,ans);
-        temp.pop_back();
-        recursion(i+1,n,nums,temp,ans);
-       
-    }
-        
-    
     vector<vector<int>> subsets(vector<int>& nums) {
         int n=nums.size();
-        vector<int> temp;
-        vector<vector<int>>ans;
-        recursion(0,n,nums,temp,ans);
-        return ans;
-        
-    }
+        int cnt_bit=(1<<n);
+        vector<vector<int>> subsetsa;
+        for(int mask=0; mask < cnt_bit ; mask++){
+            vector<int> subset;
+            for(int i=0;i<n;i++){
+                if((mask & (1<<i))!=0){
+                    subset.push_back(nums[i]);
+                }
+            }
+            subsetsa.push_back(subset);
+            
+        }
+        return subsetsa;
+    }    
 };
