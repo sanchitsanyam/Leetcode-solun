@@ -11,11 +11,23 @@
  */
 class Solution {
 public:
-    int depthHelper(TreeNode* root){
-        if(root==NULL) return 0;
-        return max(depthHelper(root->left),depthHelper(root->right))+1;
+    int dfs(TreeNode* curr){
+        if(curr->left==NULL && curr->right==NULL){
+            return 1;
+        }
+        int l=0,r=0;
+        if(curr->left){
+            l=dfs(curr->left);
+        }
+        if(curr->right){
+            r=dfs(curr->right);
+        }
+        return 1+max(l,r);
+        
+    
     }
     int maxDepth(TreeNode* root) {
-        return depthHelper( root);
+        if(root==NULL)return 0;
+        return dfs(root);
     }
 };
