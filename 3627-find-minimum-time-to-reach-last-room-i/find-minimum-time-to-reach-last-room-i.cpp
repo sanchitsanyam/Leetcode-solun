@@ -1,40 +1,23 @@
-
 class Solution {
-    int n ,m;
-    vector<vector<int>> memo;
-    int dfs(vector<vector<int>>& moveTime ,int i ,int j , int time){
-        if(i==n-1 && j==m-1)return time;
-        if(memo[i][j]<=time)return INT_MAX;
-        memo[i][j]=time;
-        int mintime=INT_MAX;
-        //up
-        if(i>0){
-            int newTime=max(time , moveTime[i-1][j]);
-            mintime=min(mintime,dfs(moveTime,i-1,j,newTime+1));
-        }
-        //down
-        if(i<n-1){
-            int newTime=max(time , moveTime[i+1][j]);
-            mintime=min(mintime,dfs(moveTime,i+1,j,newTime+1));
-        }
-        //left
-        if(j>0){
-            int newTime=max(time , moveTime[i][j-1]);
-            mintime=min(mintime,dfs(moveTime,i,j-1,newTime+1));
-        }
-        //right
-        if(j<m-1){
-            int newTime=max(time , moveTime[i][j+1]);
-            mintime=min(mintime,dfs(moveTime,i,j+1,newTime+1));
-        }
-        return mintime;
-
-    }
+    const int dx[4]={-1,1,0,0};
+    const int dy[4]={0,0,-1,1};
 public:
     int minTimeToReach(vector<vector<int>>& moveTime) {
-        n=moveTime.size();
-        m=moveTime[0].size();
-        memo.assign(n,vector<int>(m,INT_MAX));
-        return dfs(moveTime, 0, 0, 0);
+        int n=moveTime.size() ,m=moveTime[0].size();
+        vector<vector<int>> dist(n ,vector<int>(m,INT_MAX));
+        set<tuple<int ,int,int>>q ; q.insert({0,0,0});dist[0][0]=0;
+        while(!q.empty()){
+            auto [distance , x , y]=*q.begin();q.erase(*q.begin());
+            for(int i=0;i<4 ;i++){
+                int X=x+dx[i],Y=y+dy[i];
+                if(X>=0 && Y>=0 && X<n && Y<m && dist[X][Y] > max(dist[x][y]+1, moveTime[X][Y]+1)){
+                    q.erase({dist[X][Y],X ,Y});
+                    dist[X][Y]=max(dist[x][y]+1, moveTime[X][Y]+1);
+                    q.insert({dist[X][Y],X ,Y});
+                }
+            }
+        }
+        return dist[n-1][m-1];
+
     }
 };
