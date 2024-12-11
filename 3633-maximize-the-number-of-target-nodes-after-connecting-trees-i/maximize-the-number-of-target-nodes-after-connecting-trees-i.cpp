@@ -1,53 +1,66 @@
 class Solution {
 public:
-    vector<int> tonlev(int n ,vector<vector<int>>&adj , int k){
-        vector<int> reachable(n,0);
-        for(int i=0 ; i<n; i++){
-            vector<int> vis(n,0);
-            vis[i]=1;
-            int c=0;
-            queue<pair<int,int>> q;
-            q.push({i,0});
-            while(!q.empty()){
-                auto [u,level]=q.front();
+    // Function to compute the number of reachable nodes within a given level k
+    vector<int> computeReachableNodes(int n, vector<vector<int>>& adj, int k) {
+        vector<int> reachable(n, 0);
+        for (int i = 0; i < n; i++) {
+            vector<int> visited(n, 0);
+            visited[i] = 1;
+            int count = 0;
+            queue<pair<int, int>> q;
+            q.push({i, 0});
+            
+            while (!q.empty()) {
+                auto [node, level] = q.front();
                 q.pop();
-                if(level>k)continue;
-                c++;
-                for(int&  v:adj[u]){
-                    if(!vis[v]){
-                       q.push({v,level+1});
-                       vis[v]=1; 
+                if (level > k) continue;
+                count++;
+                
+                for (int& neighbor : adj[node]) {
+                    if (!visited[neighbor]) {
+                        q.push({neighbor, level + 1});
+                        visited[neighbor] = 1;
                     }
                 }
             }
-            reachable[i] = c;
+            reachable[i] = count;
         }
         return reachable;
-
-
     }
+
+    // Function to calculate maximum target nodes considering two graphs
     vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2, int k) {
-        int n=edges1.size()+1;
-        int m=edges2.size()+1;
-        vector<vector<int>> adj1(n) ,adj2(m);
-        for(auto & u:edges1){
-            adj1[u[0]].push_back(u[1]);
-            adj1[u[1]].push_back(u[0]);
-        }
-        for(auto & u:edges2){
-            adj2[u[0]].push_back(u[1]);
-            adj2[u[1]].push_back(u[0]);
+        int n = edges1.size() + 1;
+        int m = edges2.size() + 1;
+        vector<vector<int>> adj1(n), adj2(m);
+        
+        // Build adjacency list for the first graph
+        for (auto& edge : edges1) {
+            adj1[edge[0]].push_back(edge[1]);
+            adj1[edge[1]].push_back(edge[0]);
         }
         
-        vector<int> ans= tonlev(n ,adj1 , k);
-        vector<int> mk=tonlev(m ,adj2 ,k-1);
-        int maxm=INT_MIN;
-        for(int i=0;i<mk.size();i++){
-            maxm=max(maxm,mk[i]);
+        // Build adjacency list for the second graph
+        for (auto& edge : edges2) {
+            adj2[edge[0]].push_back(edge[1]);
+            adj2[edge[1]].push_back(edge[0]);
         }
-        for(int i=0;i<n;i++){
-            ans[i]+=maxm;
+        
+        // Calculate reachable nodes for both graphs
+        vector<int> reachableGraph1 = computeReachableNodes(n, adj1, k);
+        vector<int> reachableGraph2 = computeReachableNodes(m, adj2, k - 1);
+        
+        // Find the maximum reachable nodes in the second graph
+        int maxReachableInGraph2 = INT_MIN;
+        for (int nodes : reachableGraph2) {
+            maxReachableInGraph2 = max(maxReachableInGraph2, nodes);
         }
-        return ans;
+        
+        // Add maximum reachable nodes of graph2 to each node's count in graph1
+        for (int i = 0; i < n; i++) {
+            reachableGraph1[i] += maxReachableInGraph2;
+        }
+        
+        return reachableGraph1;
     }
 };
