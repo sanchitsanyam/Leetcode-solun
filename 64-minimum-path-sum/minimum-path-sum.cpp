@@ -24,30 +24,55 @@ public:
         // return help(0 ,0 ,grid,dp);
         
         // tabulation
+        // int m=grid.size(),n=grid[0].size();
+        // vector<vector<int>> dp(m,vector<int>(n,-1));
+        // for(int i=0;i<m;i++){
+        //     for(int j=0;j<n;j++){
+        //         int s=grid[i][j];
+        //         if(i==0 && j==0){
+        //             dp[0][0]=s;
+        //             continue;
+        //         }
+        //         else{
+        //             int u=1e9 ,l=1e9;//u-up & l-left
+        //             if(i>0){
+        //               u=dp[i-1][j];
+        //             }
+        //             if(j>0){
+        //                 l=dp[i][j-1];
+        //             }
+        //             dp[i][j]=s+min(u ,l);
+        //         }
+        //     }
+        // }
+        // return dp[m-1][n-1];
+        
+        //Space optimization 
         int m=grid.size(),n=grid[0].size();
-        vector<vector<int>> dp(m,vector<int>(n,-1));
+        vector<int> prev(n,0);
         for(int i=0;i<m;i++){
+            vector<int> curr(n,0);
             for(int j=0;j<n;j++){
                 int s=grid[i][j];
                 if(i==0 && j==0){
-                    dp[0][0]=s;
+                    curr[j]=s;
                     continue;
                 }
                 else{
-                    int u=1e9 ,l=1e9;//u-up & l-left
+                    int u=1e9 , l=1e9;
                     if(i>0){
-                      u=dp[i-1][j];
+                        u=prev[j];
                     }
                     if(j>0){
-                        l=dp[i][j-1];
+                        l=curr[j-1];
                     }
-                    dp[i][j]=s+min(u ,l);
-
+                    curr[j]=s+min(l,u);
                 }
             }
-
+            prev=curr;
         }
-        return dp[m-1][n-1];
+        return prev[n-1];
+
         
     }
 };
