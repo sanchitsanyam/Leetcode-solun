@@ -25,29 +25,60 @@ public:
     // }
 
     //Tabulation
+    // int coinChange(vector<int>& coins, int amount) {
+    //     int n=coins.size();
+    //     vector<vector<int>> dp(n,vector<int>(amount+1,0));
+    //     for(int A=0;A<=amount;A++){
+    //         if(A%coins[0]==0){
+    //             dp[0][A]=A/coins[0];
+    //         }
+    //         else{
+    //             dp[0][A]=1e9;
+    //         }
+    //     }
+    //     for(int i=1;i<n;i++){
+    //         for(int A=0;A<=amount;A++){
+    //             int nT=0+dp[i-1][A];
+    //             int T=1e9;
+    //             if(A>=coins[i]){
+    //                 T=1+dp[i][A-coins[i]];
+    //             }
+    //             dp[i][A]=min(T,nT);
+    //         }
+            
+    //     }
+    //     int ans= dp[n-1][amount];
+    //     if(ans==1e9)return -1;
+    //     else return ans;
+        
+    // }
+
+    //space optimization
+    //Tabulation
     int coinChange(vector<int>& coins, int amount) {
         int n=coins.size();
-        vector<vector<int>> dp(n,vector<int>(amount+1,0));
+        vector<int> prev(amount+1,0);
         for(int A=0;A<=amount;A++){
             if(A%coins[0]==0){
-                dp[0][A]=A/coins[0];
+                prev[A]=A/coins[0];
             }
             else{
-                dp[0][A]=1e9;
+                prev[A]=1e9;
             }
         }
         for(int i=1;i<n;i++){
+            vector<int> curr(amount+1,0);
             for(int A=0;A<=amount;A++){
-                int nT=0+dp[i-1][A];
+                int nT=0+prev[A];
                 int T=1e9;
                 if(A>=coins[i]){
-                    T=1+dp[i][A-coins[i]];
+                    T=1+curr[A-coins[i]];
                 }
-                dp[i][A]=min(T,nT);
+                curr[A]=min(T,nT);
             }
-            
+            prev=curr;
         }
-        int ans= dp[n-1][amount];
+        int ans= prev[amount];
         if(ans==1e9)return -1;
         else return ans;
         
