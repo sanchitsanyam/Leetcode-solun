@@ -20,25 +20,29 @@ public:
 
 
     // recursion another Way
-    int help(int i, int Csum , vector<int>& nums, int target){
+    int help(int i, int Csum , vector<int>& nums, int target,vector<vector<int>>& dp){
         int n=nums.size();
+        if(Csum>target)return 0;
         if(i==n){
             if(Csum==target)return 1;
             else return 0;
         }
-        int  nT=help(i+1,Csum,nums,target);
-        int  T=help(i+1,Csum+nums[i],nums,target);
-        return nT+T;
+        if(dp[i][Csum]!=-1)return dp[i][Csum];
+        int  nT=help(i+1,Csum,nums,target,dp);
+        int  T=help(i+1,Csum+nums[i],nums,target,dp);
+        return dp[i][Csum]=nT+T;
     }
     int findTargetSumWays(vector<int>& nums, int target) {
         int n=nums.size();
         int Sum=accumulate(nums.begin(),nums.end(),0);
         int k=(target+Sum);
+        if(abs(target)>Sum)return 0;
         if(k%2!=0)return 0;
         else k=k/2;
-        return help(0,0,nums,k);
-        // vector<vector<int>> dp(n,vector<int>(2001,-1));
-        // return help(0,0,nums,target,dp);
+        if(k<0)return 0;
+        vector<vector<int>> dp(n,vector<int>(k+1,-1));
+        return help(0,0,nums,k,dp);
+        
     }
     
 };
