@@ -22,25 +22,51 @@ public:
     // }
 
     //Tabulation
+    //  int maxProfit(vector<int>& prices, int fee) {
+    //     int n=prices.size();
+    //     vector<vector<int>> dp(n+1,vector<int>(2,0));
+    //     dp[n][0]=0, dp[n][1]=0;
+    //     for(int i=n-1;i>=0;i--){
+    //         for(int j=0;j<=1;j++){
+    //             int opn1 ,opn2;
+    //             if(j==0){
+    //                 opn1=-prices[i]-fee+dp[i+1][1];
+    //                 opn2=dp[i+1][0];
+    //             }
+    //             else{
+    //                 opn1=prices[i]+dp[i+1][0];
+    //                 opn2=dp[i+1][1];
+    //             }
+    //             dp[i][j]=max(opn1 ,opn2);
+    //         }
+    //     }
+    //     return dp[0][0];
+    
+    // }
+
+
+    //Space Optimization
      int maxProfit(vector<int>& prices, int fee) {
         int n=prices.size();
-        vector<vector<int>> dp(n+1,vector<int>(2,0));
-        dp[n][0]=0, dp[n][1]=0;
+        vector<int> prev(2,0);
+        prev[0]=0, prev[1]=0;
         for(int i=n-1;i>=0;i--){
+            vector<int> curr(2,0);
             for(int j=0;j<=1;j++){
                 int opn1 ,opn2;
                 if(j==0){
-                    opn1=-prices[i]-fee+dp[i+1][1];
-                    opn2=dp[i+1][0];
+                    opn1=-prices[i]-fee+prev[1];
+                    opn2=prev[0];
                 }
                 else{
-                    opn1=prices[i]+dp[i+1][0];
-                    opn2=dp[i+1][1];
+                    opn1=prices[i]+prev[0];
+                    opn2=prev[1];
                 }
-                dp[i][j]=max(opn1 ,opn2);
+                curr[j]=max(opn1 ,opn2);
             }
+            prev=curr;
         }
-        return dp[0][0];
+        return prev[0];
     
     }
 };
