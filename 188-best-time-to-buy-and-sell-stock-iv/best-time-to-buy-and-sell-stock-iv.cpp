@@ -1,5 +1,5 @@
 class Solution {
-    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/
+    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/ (must see this you will understand everything)
 public:
     int maxProfit(int k1, vector<int>& prices) {
         int n=prices.size();
