@@ -1,27 +1,17 @@
+//https://youtu.be/VjL8mlof27k?si=x-AicRExMt2WUwzU
 class Solution {
 public:
     int minOperations(vector<int>& nums) {
-        vector<bool> seen(100001,false);
-        vector<int>   st(200001);
-        int top=0;
-        int ans=0;
-        for(int curr: nums){
-            if(curr==0){
-                while(top){
-                    seen[st[--top]]=false;
-                }
-               continue;
-            }
-            while(top && st[top-1]>curr){
-                seen[st[--top]]=false;
-            }
-            if(!seen[curr]){
-                ans++;
-                seen[curr]=true;
-            }
-            st[top++]=curr;
-
+        stack<int> s;
+        int n=nums.size();
+        int opn=0;
+        s.push(-1);
+        for(int i=n-1;i>=0;i--){
+            while(s.top()>nums[i])s.pop();
+            opn += ((nums[i]!=0)&&(s.top()<nums[i]));
+            s.push(nums[i]);
         }
-        return ans;
+        return opn;
+        
     }
 };
