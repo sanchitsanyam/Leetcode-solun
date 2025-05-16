@@ -16,17 +16,19 @@ public:
         int s=min(r1,r2);
         int e=max(r1,r2);
         TreeNode* curr=root;
-        while(curr){
+        while(!(s < curr->val && curr->val <e) || curr!=nullptr){
             int x=curr->val;
-            if(x<s)curr=curr->right;
-            else if(x>e){
-                curr=curr->left;
+            if(s<x && e<x){
+                if(curr->left)curr=curr->left;
+            }
+            else if(s>x && e>x){
+                if(curr->right)curr=curr->right;
             }
             else{
                 return curr;
             }
         }
-        return nullptr;
+        return curr;
         
     }
 };
