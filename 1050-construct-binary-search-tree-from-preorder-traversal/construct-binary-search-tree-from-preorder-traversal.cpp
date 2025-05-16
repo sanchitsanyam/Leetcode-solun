@@ -16,8 +16,10 @@ public:
         int x=preorder[0];
         TreeNode* curr=new TreeNode(preorder[0]);
         int c=1;
-        while(c<preorder.size() && preorder[c]<x){
-            c++;
+        for(int i=0;i<preorder.size();i++){
+            if(preorder[i]<x){
+                c++;
+            }
         }
         vector<int> leftsub(preorder.begin()+1,preorder.begin()+c);
         vector<int> rightsub(preorder.begin()+c,preorder.end());
