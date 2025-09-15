@@ -4,60 +4,64 @@ public:
         vector<string> wordlist1=wordlist;
         unordered_map<string,string> w;
         for(auto& s:wordlist1){
-            string t=s;
-            string r;
-            for (char p : t) {
-                r.push_back(static_cast<char>(tolower(static_cast<unsigned char>(p))));
+            string g=s;
+            string t;
+            for (char w : g) {
+                t.push_back(static_cast<char>(tolower(static_cast<unsigned char>(w))));
             }
-            for(char& c:r){
-                if(c =='a'||c =='e'|| c =='i'|| c =='o' || c =='u'){
-                    c = '*';
+            for(char& c:t){
+                if(c=='a'||c=='e'||c=='i'|| c=='o' || c=='u'){
+                    c='*';
                 }
             }
-            if (!w.count(r)) w[r] = s;   
+            if(w[t]=="")w[t]=s;
         }
         
         unordered_map<string,string> m;
-       
+        unordered_map<string,int> m1;
         for(auto s: wordlist){
             string c;
-            for (char r : s) {
-                c.push_back(static_cast<char>(tolower(static_cast<unsigned char>(r))));
+            for (char w : s) {
+                c.push_back(static_cast<char>(tolower(static_cast<unsigned char>(w))));
             }
-            if(!m.count(c)) m[c] = s;
+            if(m[c]=="")m[c]=s;
+            else{
+                m1[s]=1;
+            }
         }
-        unordered_set<string> exact(wordlist.begin(), wordlist.end());
         int n=queries.size();
         for(int i=0;i<n;i++){
-            if (exact.count(queries[i])) continue;
             string s=queries[i];
             string c;
-            // lowercase of query
-            for (char p : s) {
-                c.push_back(static_cast<char>(tolower(static_cast<unsigned char>(p))));
+            for (char w : s) {
+                c.push_back(static_cast<char>(tolower(static_cast<unsigned char>(w))));
             }
-          
-            // Rule 2: case-insensitive
-            auto it = m.find(c);
-            if (it != m.end()) {
-                queries[i] = it->second;
-                continue;
+            // cout<<s<<" "<<endl;
+            if(m[c]!=""){
+                if(m1[s])continue;
+                else{
+                    queries[i]=m[c];
+                    continue;
+                }
             }
-            // Rule 3: vowel-error (on LOWERCASE)
-            string maskq = c;
-            for (char& ch : maskq) {
-                if (ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u') ch='*';
-            }
-
-            auto it2 = w.find(maskq);
-            if (it2 != w.end()) {
-                queries[i] = it2->second;
-            } else {
-                queries[i] = "";
+            else{
+                string masq=c;
+                for(char& t:masq){
+                    if(t=='a'||t=='e'||t=='i'|| t=='o' || t=='u'){
+                        t='*';
+                    }
+                }
+                if(w[masq]!=""){
+                    // cout<<s<<" ";
+                    queries[i]=w[masq];
+                    
+                }
+                else{
+                    queries[i]="";
+                }
             }
         }
-        return queries;
-
+        return  queries;
 
     }
 };
