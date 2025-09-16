@@ -30,11 +30,9 @@ public:
             }
             else{
                 s.push(nums[i]);
-                check(s);
+                
             }
         }
-
-
         vector<int> ans;
         int m=s.size();
         for(int i=0 ; i<m ; i++){
