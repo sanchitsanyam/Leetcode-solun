@@ -7,7 +7,7 @@ public:
         int m=(start+forget>n)?1:0;
         int ans=1*m;
         for(int i=start+delay;i<min(start+forget,n+1);i++){
-            ans=(ans+help(i,delay,forget,n,dp))%(mod);
+            ans=((ans%mod)+(help(i,delay,forget,n,dp)%mod))%(mod);
         }
         return dp[start]=ans;
     }
