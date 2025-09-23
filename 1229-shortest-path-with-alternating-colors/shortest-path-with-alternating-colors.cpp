@@ -1,44 +1,44 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 class Solution {
 public:
-    vector<int> shortestAlternatingPaths(int n,
-        vector<vector<int>>& redEdges,
-        vector<vector<int>>& blueEdges) {
-
-        // adj[u] -> {v, color} where color: 0 = red, 1 = blue
+    vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
         vector<vector<pair<int,int>>> adj(n);
-        for (auto& e : redEdges) adj[e[0]].push_back({e[1], 0});
-        for (auto& e : blueEdges) adj[e[0]].push_back({e[1], 1});
-
-        const int INF = 1e9;
-        // dist[node][color]: shortest distance to node ending with 'color'
-        vector<vector<int>> dist(n, vector<int>(2, INF));
+        // 0 for redEdges
+        for(auto& k:redEdges){
+            int u=k[0],v=k[1];
+            adj[u].push_back({v,0});
+        }
+        for(auto& k:blueEdges){
+            int u=k[0],v=k[1];
+            adj[u].push_back({v,1});
+        }
         queue<pair<int,int>> q;
-
-        // Start at 0 with both “virtual” last colors
-        dist[0][0] = 0;
-        dist[0][1] = 0;
-        q.push({0, 0});
-        q.push({0, 1});
-
-        while (!q.empty()) {
-            auto [u, last] = q.front(); q.pop();
-            for (auto &[v, col] : adj[u]) {
-                if (col == last) continue;                 // must alternate
-                if (dist[v][col] > dist[u][last] + 1) {
-                    dist[v][col] = dist[u][last] + 1;
-                    q.push({v, col});
+        vector<vector<int>> ans(n,vector<int>(2,-1));
+        ans[0][1]=0;
+        ans[0][0]=0;
+        q.push({0,0});
+        q.push({0,1});
+        while(!q.empty()){
+            auto l=q.front();
+            int u=l.first, c=l.second;
+            q.pop();
+            for(auto& k:adj[u]){
+                int v=k.first,c1=k.second;
+                if(ans[v][c1]==-1 && c1!=c ){
+                   ans[v][c1]=ans[u][c]+1;
+                   q.push({v,c1});
+                }
+                else if(1+ans[u][c]<=ans[v][c1] && c1!=c){
+                    ans[v][c1]=ans[u][c]+1;
+                    q.push({v,c1});
                 }
             }
         }
-
-        vector<int> ans(n, -1);
-        for (int i = 0; i < n; ++i) {
-            int best = min(dist[i][0], dist[i][1]);
-            if (best != INF) ans[i] = best;
+        vector<int> A(n,-1);
+        for(int i=0;i<n;i++){
+            if(ans[i][0]==-1)A[i]=ans[i][1];
+            else if(ans[i][1]==-1)A[i]=ans[i][0];
+            else A[i]=min(ans[i][0],ans[i][1]);
         }
-        return ans;
+        return A;
     }
 };
