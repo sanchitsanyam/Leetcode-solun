@@ -24,8 +24,8 @@ public:
     int minScoreTriangulation(vector<int>& values) {
         int n=values.size();
         vector<vector<int>> dp(n,vector<int>(n,0));
-        for(int i=n-1;i>=0;i--){
-            for(int j=i+2;j<n;j++){
+        for(int j=0;j<n;j++){
+            for(int i=j-2;i>=0;i--){
                 int x=INT_MAX;
                 for(int k=i+1;k<j;k++){
                     int left=dp[i][k];
