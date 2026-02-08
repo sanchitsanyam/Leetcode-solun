@@ -11,18 +11,17 @@
  */
 class Solution {
 public:
-    
-    int depthHelper(TreeNode* root){
-        if(root==NULL) return 0;
-        return max(depthHelper(root->left),depthHelper(root->right))+1;
+    int help(TreeNode* root ){
+        if(root==NULL)return 0;
+        int lh=help(root->left);
+        if(lh==-1)return -1;
+        int rh=help(root->right);
+        if(rh==-1)return -1;
+        if(abs(lh-rh)>1)return -1;
+        return 1+max(lh,rh);
     }
-    
     bool isBalanced(TreeNode* root) {
-        if(root==NULL)return true;
-       int lh=depthHelper(root->left);
-       int rh=depthHelper(root->right);
-       int absdiff=abs(lh-rh);
-       if(absdiff>1)return false;
-       return isBalanced(root->left) && isBalanced( root->right);
+        if(help(root)!=-1)return true;
+        return false;
     }
 };
